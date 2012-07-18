@@ -1,0 +1,7 @@
+The libruby project of the Owl platform builds a ruby gem that
+adds support for the GRAIL network protocols used in the Owl
+platform and in other GRAIL compatible projects.
+
+Quick instructions:
+ gem build libowl.gemspec
+ sudo gem install libowl-1.0.gem

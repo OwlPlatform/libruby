@@ -1,3 +1,9 @@
+#vim Swap files
+*.swp
+
+#Ruby gems
+*.gem
+
 CMakeCache.txt
 CMakeFiles
 Makefile
