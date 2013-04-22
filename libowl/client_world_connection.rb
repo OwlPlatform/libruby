@@ -1,81 +1,11 @@
 require 'socket'
 require 'wm_data.rb'
 require 'buffer_manip.rb'
+require 'response.rb'
+require 'step_response.rb'
 
 require 'thread'
 
-#Response of a client request to the world model
-class Response
-  def initialize(cwm, key)
-    @cwm = cwm
-    @request_key = key
-  end
-
-  def get()
-    while (not (ready() or isError()))
-      sleep(1)
-    end
-    if (isError())
-      raise getError()
-    else
-      return @cwm.getNext(@request_key)
-    end
-  end
-
-  def ready()
-    return @cwm.hasNext(@request_key)
-  end
-
-  def isError()
-    return @cwm.hasError(@request_key)
-  end
-
-  def getError()
-    return @cwm.getError(@request_key)
-  end
-
-  def cancel()
-    #TODO
-  end
-end
-
-class StepResponse
-  def initialize(cwm, key)
-    @cwm = cwm
-    @request_key = key
-  end
-
- def next()
-   while (not (hasNext() or isError()))
-     sleep(1)
-   end
-   if (isError())
-     raise getError()
-   else
-     return @cwm.getNext(@request_key)
-   end
- end
-
- def hasNext()
-   return @cwm.hasNext(@request_key)
- end
-
- def isError()
-   return @cwm.hasError(@request_key)
- end
-
- def getError()
-   return @cwm.getError(@request_key)
- end
-
- def isComplete()
-   return @cwm.isComplete(@request_key)
- end
-
- def cancel()
-   #TODO
- end
-end
 
 class ClientWorldConnection
   #Message constants

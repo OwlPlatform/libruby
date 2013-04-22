@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bernhard Firner"]
-  s.date = %q{2011-07-11}
-  s.description = %q{The libowl network protocols are the protocols used to interact with the Owl platform or any other system that uses the GRAIL network protocols. Go to this URL for more information: http://sourceforge.net/apps/mediawiki/grailrtls/index.php?title=Category:GRAIL_RTLS_v3_Documentation}
+  s.date = %q{2013-04-21}
+  s.description = %q{The libowl network protocols are the protocols used to interact with the Owl platform or any other system that uses the GRAIL network protocols. Go to www.owlplatform.com for more information.}
   s.email = %q{bfirner@eden.rutgers.edu}
   #s.extensions = ["extconf.rb"]
   s.files = ["README.md", "LICENSE"]
