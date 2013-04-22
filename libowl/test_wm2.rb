@@ -25,7 +25,7 @@ result = cwm.snapshotRequest('.*', ['.*']).get()
 result.each_pair {|uri, attributes|
   puts "Found uri \"#{uri}\" with attributes:"
   attributes.each {|attr|
-    puts "\t#{attr.name}"
+    puts "\t#{attr.name} is #{attr.data.unpack('G')}"
   }
 }
 
