@@ -366,5 +366,14 @@ class ClientWorldConnection
     #Send the message with its length prepended to the front
     @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
   end
+
+  #Cancel a request with the given ticket number
+  def cancelRequest(ticket_number)
+    buff = [CANCEL_REQUEST].pack('C')
+    #Now append the ticket number as a 4 byte value
+    buff += [ticket_number].pack('N')
+    #Send the message with its length prepended to the front
+    @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
+  end
 end
 

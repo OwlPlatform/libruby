@@ -53,6 +53,6 @@ class Response
   end
 
   def cancel()
-    #TODO
+    return @cwm.cancelRequest(@request_key)
   end
 end
