@@ -23,12 +23,19 @@
 #
 ################################################################################
 
+#Incrementeal response of a client streaming request to the world model
 class StepResponse
-  def initialize(cwm, key)
-    @cwm = cwm
+  ##
+  #Initialize with the ClientWorldConnection that spawed this Response and
+  #the key of the request.
+  def initialize(cwc, key)
+    @cwc = cwc
     @request_key = key
   end
 
+  ##
+  #Get the data of this StepResponse, blocking until that data is ready or
+  #an error occurs.
  def next()
    while (not (hasNext() or isError()))
      sleep(1)
@@ -36,28 +43,38 @@ class StepResponse
    if (isError())
      raise getError()
    else
-     return @cwm.getNext(@request_key)
+     return @cwc.getNext(@request_key)
    end
  end
 
+  ##
+  #Returns true if data is available for a call to next().
  def hasNext()
-   return @cwm.hasNext(@request_key)
+   return @cwc.hasNext(@request_key)
  end
 
+  ##
+  #Returns true if an error has occured.
  def isError()
-   return @cwm.hasError(@request_key)
+   return @cwc.hasError(@request_key)
  end
 
+  ##
+  #Get the error that occured.
  def getError()
-   return @cwm.getError(@request_key)
+   return @cwc.getError(@request_key)
  end
 
+ ##
+ #True if this streaming request will have no more data.
  def isComplete()
-   return @cwm.isComplete(@request_key)
+   return @cwc.isComplete(@request_key)
  end
 
+ ##
+ #Cancel the streaming request.
  def cancel()
-   return @cwm.cancelRequest(@request_key)
+   return @cwc.cancelRequest(@request_key)
  end
 end
 

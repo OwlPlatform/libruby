@@ -1,4 +1,28 @@
+################################################################################
+#This file defines the ClientWorldConnection class, an object that represents
+#a network connection to an Owl world model.
+#
+# Copyright (c) 2013 Bernhard Firner
+# All rights reserved.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# or visit http://www.gnu.org/licenses/gpl-2.0.html
+#
+################################################################################
 require 'socket'
+require 'message_constants.rb'
 require 'wm_data.rb'
 require 'buffer_manip.rb'
 require 'response.rb'
@@ -6,22 +30,14 @@ require 'step_response.rb'
 
 require 'thread'
 
-
+##
+#A connection between a client and a world model.
+#This class spawns a thread to handle incoming messages and returns
+#instances of the Response and StepResponse classes to fulfill client
+#requests. If a thread cannot be used then an instance of the class
+#ClientWorldModel should be used instead.
 class ClientWorldConnection
-  #Message constants
-  KEEP_ALIVE       = 0;
-  SNAPSHOT_REQUEST = 1;
-  RANGE_REQUEST    = 2;
-  STREAM_REQUEST   = 3;
-  ATTRIBUTE_ALIAS  = 4;
-  ORIGIN_ALIAS     = 5;
-  REQUEST_COMPLETE = 6;
-  CANCEL_REQUEST   = 7;
-  DATA_RESPONSE    = 8;
-  URI_SEARCH       = 9;
-  URI_RESPONSE     = 10;
-  ORIGIN_PREFERENCE = 11;
-
+  #Indicates if this object is successfully connected to a world model.
   attr_reader :connected
   @alias_to_attr_name
   @alias_to_origin_name
@@ -39,6 +55,9 @@ class ClientWorldConnection
   @single_response
 
 
+  ##
+  #Creates a new connection and spawns a thread to call handleMessage
+  #automatically.
   def initialize(host, port)
     @promise_mutex = Mutex.new
     @cur_key = 0
@@ -82,12 +101,16 @@ class ClientWorldConnection
     end
   end
 
+  ##
+  #Close this connection
   def close()
     @socket.close()
     @connected = false
   end
 
-  #Handle a message of currently unknown type
+  ##
+  #Handle a message of currently unknown type. This is automatically
+  #handled by a thread spawned at object creation.
   def handleMessage()
     #puts "Handling message..."
     #Get the message length as n unsigned integer
@@ -141,7 +164,9 @@ class ClientWorldConnection
   end
 
 
-  #See if a request is still being serviced (only for StepResponse)
+  ##
+  #See if a request is still being serviced (only for StepResponse - regular
+  #requests can't be cancelled since they only have a single response).
   def isComplete(key)
     @promise_mutex.synchronize do
       if ((not @next_data.has_key?(key)))
@@ -154,14 +179,23 @@ class ClientWorldConnection
     end
   end
 
+  ##
   #getNext should only be called if hasNext is true, otherwise
-  #the future will be given an exception
+  #the future will be given an exception since there is no data.
+  #The response and stepResponse classes can call this directly
+  #so there usually won't be a need for a developer to call this
+  #function directly.
   def hasNext(key)
     @promise_mutex.synchronize do
       return ((@next_data.has_key? key) and (@next_data[key].length > 1))
     end
   end
 
+  ##
+  #Get the data from the response object corresponding to this key.
+  #The response and stepResponse classes can call this directly
+  #so there usually won't be a need for a developer to call this
+  #function directly.
   def getNext(key)
     if (not hasNext(key))
       raise "No next value in request"
@@ -179,13 +213,18 @@ class ClientWorldConnection
     end
   end
 
-  #Check for an error
+  ##
+  #Check if a request has an error.
+  #The response and stepResponse classes can call this directly
+  #so there usually won't be a need for a developer to call this
+  #function directly.
   def hasError(key)
     @promise_mutex.synchronize do
       return (@request_errors.has_key? key)
     end
   end
 
+  ##
   #Get error (will return std::exception("No error") is there is none
   def getError(key)
     if (not hasError(key))
@@ -221,11 +260,14 @@ class ClientWorldConnection
     end
   end
 
+  ##
   #Decode a ticket message or a request complete message.
   def decodeTicketMessage(inbuff)
     return inbuff.unpack('N')[0]
   end
 
+  ##
+  #Decode a URI response message, returning an array of WMData
   def decodeURIResponse(inbuff)
     uris = []
     if (inbuff != nil)
@@ -238,6 +280,8 @@ class ClientWorldConnection
     return uris
   end
 
+  ##
+  #Decode a data response message, returning an array of WMData
   def decodeDataResponse(inbuff)
     attributes = []
     object_uri, rest = splitURIFromRest(inbuff)
@@ -258,6 +302,8 @@ class ClientWorldConnection
     return WMData.new(object_uri, attributes, ticket)
   end
 
+  ##
+  #Issue a snapshot request, returning a Response object for the request.
   def snapshotRequest(name_pattern, attribute_patterns, start_time = 0, stop_time = 0)
     #Set up a ticket and mark this request as active by adding it to next_data
     ticket = 0
@@ -284,6 +330,8 @@ class ClientWorldConnection
     return Response.new(self, ticket)
   end
 
+  ##
+  #Issue a range request, returning a Response object for the request.
   def rangeRequest(name_pattern, attribute_patterns, start_time, stop_time)
     #Set up a ticket and mark this request as active by adding it to next_data
     ticket = 0
@@ -311,6 +359,8 @@ class ClientWorldConnection
     return StepResponse.new(self, ticket)
   end
 
+  ##
+  #Issue a stream request, returning a StepResponse object for the request.
   def streamRequest(name_pattern, attribute_patterns, update_interval)
     #Set up a ticket and mark this request as active by adding it to next_data
     ticket = 0
@@ -338,6 +388,9 @@ class ClientWorldConnection
     return StepResponse.new(self, ticket)
   end
 
+  ##
+  #Search for any objects in the world model matching the given
+  #POSIX REGEX pattern.
   def URISearch(name_pattern)
     #Set up a ticket and mark this request as active by adding it to next_data
     ticket = 0
@@ -355,6 +408,8 @@ class ClientWorldConnection
     return Response.new(self, ticket)
   end
 
+  ##
+  #Set a preference in the world model for certain origins.
   def setOriginPreference(origin_weights)
     buff = [ORIGIN_PREFERENCE].pack('C')
     #Each origin weight should be a pair of a name and a value
@@ -367,7 +422,7 @@ class ClientWorldConnection
     @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
   end
 
-  #Cancel a request with the given ticket number
+  ##Cancel a request with the given ticket number
   def cancelRequest(ticket_number)
     buff = [CANCEL_REQUEST].pack('C')
     #Now append the ticket number as a 4 byte value

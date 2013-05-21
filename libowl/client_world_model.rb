@@ -1,25 +1,42 @@
-#This class abstracts the details of connecting to a
-#GRAIL3 world model as a client.
+################################################################################
+#This file defines the ClientWorldModel class, an object that connects to an
+#Owl world model, simplifying requesting and handling data. This class does not
+#keep a threaded connection open as in the ClientWorldConnection so message
+#handling must be scheduled by the client.
+#
+# Copyright (c) 2013 Bernhard Firner
+# All rights reserved.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+# or visit http://www.gnu.org/licenses/gpl-2.0.html
+#
+################################################################################
 
 require 'socket'
+require 'message_constants.rb'
 require 'buffer_manip.rb'
 require 'wm_data.rb'
 require 'transient_request.rb'
 
+##
+#This class abstracts the network details of connecting to a World Model.
+#However, this class does not use a thread to handle networking in the
+#background as in the ClientWorldConnection class, so handleMessage must
+#be called manually. If threads are available then the ClientWorldConnection
+#class is simpler to use.
 class ClientWorldModel
-  #Message constants
-  KEEP_ALIVE       = 0;
-  SNAPSHOT_REQUEST = 1;
-  RANGE_REQUEST    = 2;
-  STREAM_REQUEST   = 3;
-  ATTRIBUTE_ALIAS  = 4;
-  ORIGIN_ALIAS     = 5;
-  REQUEST_COMPLETE = 6;
-  CANCEL_REQUEST   = 7;
-  DATA_RESPONSE    = 8;
-  URI_SEARCH       = 9;
-  URI_RESPONSE     = 10;
-
   attr_accessor :alias_to_attr_name, :alias_to_origin_name
   attr_reader :connected
   @alias_to_attr_name

@@ -7,6 +7,8 @@ require 'wm_data.rb'
 require 'transient_request.rb'
 
 class SolverWorldModel
+  #TODO Move constants to their own file
+
   #Message constants
   KEEP_ALIVE       = 0;
   TYPE_ANNOUNCE    = 1;
@@ -26,7 +28,9 @@ class SolverWorldModel
   #The origin string of this solver
   @origin
 
+  #Callback for when the world model requests transient data
   @start_transient_callback
+  #Callback for when the world model no longer wants a transient type
   @stop_transient_callback
 
   #Handle a message of currently unknown type
@@ -146,7 +150,9 @@ class SolverWorldModel
     @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
   end
 
-  #Push URI attributes
+  ##
+  #Push URI attributes, automatically declaring new solution types
+  #as non-stremaing types if they were not previously declared.
   def pushData(wmdata_vector, create_uris = false)
     buff = [SOLVER_DATA].pack('C')
     if (create_uris)
@@ -176,7 +182,8 @@ class SolverWorldModel
     @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
   end
 
-  #Create a URI
+  ##
+  #Create an object with the given name in the world model.
   def createURI(uri, creation_time)
     buff = [CREATE_URI].pack('C')
     buff += strToSizedUTF16(uri)
@@ -186,7 +193,9 @@ class SolverWorldModel
     @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
   end
 
-  #Expire a URI
+  ##
+  #Expire the object with the given name in the world model, indicating that it
+  #is no longer valid after the given time.
   def expireURI(uri, expiration_time)
     buff = [EXPIRE_URI].pack('C')
     buff += strToSizedUTF16(uri)
@@ -196,7 +205,8 @@ class SolverWorldModel
     @socket.send("#{[buff.length].pack('N')}#{buff}", 0)
   end
 
-  #Delete a URI
+  ##
+  #Delete an object in the world model.
   def deleteURI(uri)
     buff = [DELETE_URI].pack('C')
     buff += strToSizedUTF16(uri)
