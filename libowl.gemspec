@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{libowl}
-  s.version = "1.0"
+  s.version = "1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bernhard Firner"]
-  s.date = %q{2013-04-21}
+  s.date = %q{2013-05-26}
   s.description = %q{The libowl network protocols are the protocols used to interact with the Owl platform or any other system that uses the GRAIL network protocols. Go to www.owlplatform.com for more information.}
   s.email = %q{bfirner@eden.rutgers.edu}
   #s.extensions = ["extconf.rb"]

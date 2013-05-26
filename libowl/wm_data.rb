@@ -1,5 +1,14 @@
 #Solution types used when communicating with the world model
 
+##
+#Function to fetch the current time in milliseconds. This is the time format
+#used in the Owl system and is included in every attribute pushed into the
+#world model and every attribute retrieved from the world model.
+def getMsecTime()
+  t = Time.now
+  return t.tv_sec * 1000 + t.usec/10**3
+end
+
 class WMAttribute
   attr_accessor :name, :data, :creation, :expiration, :origin
   #Name of this attribute
