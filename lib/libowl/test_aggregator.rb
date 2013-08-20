@@ -1,4 +1,4 @@
-require 'solver_aggregator'
+require 'libowl/solver_aggregator'
 
 sq = SolverAggregator.new('localhost', 7008)
 

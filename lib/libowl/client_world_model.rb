@@ -25,10 +25,10 @@
 ################################################################################
 
 require 'socket'
-require 'message_constants.rb'
-require 'buffer_manip.rb'
-require 'wm_data.rb'
-require 'transient_request.rb'
+require 'libowl/message_constants.rb'
+require 'libowl/buffer_manip.rb'
+require 'libowl/wm_data.rb'
+require 'libowl/transient_request.rb'
 
 ##
 #This class abstracts the network details of connecting to a World Model.

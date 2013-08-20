@@ -3,9 +3,9 @@
 #Solvers subscribe to the aggregator and then receive packets.
 
 require 'socket'
-require 'buffer_manip.rb'
-require 'aggregator_rules.rb'
-require 'sensor_sample.rb'
+require 'libowl/buffer_manip.rb'
+require 'libowl/aggregator_rules.rb'
+require 'libowl/sensor_sample.rb'
 
 class SolverAggregator
   #Message constants

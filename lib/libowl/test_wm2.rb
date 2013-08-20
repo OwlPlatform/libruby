@@ -1,8 +1,8 @@
 #Require rubygems for old (pre 1.9 versions of Ruby and Debian-based systems)
 require 'rubygems'
-require 'client_world_connection.rb'
-require 'wm_data.rb'
-require 'buffer_manip.rb'
+require 'libowl/client_world_connection.rb'
+require 'libowl/wm_data.rb'
+require 'libowl/buffer_manip.rb'
 
 if (ARGV.length != 2)
   puts "This program needs the ip address and client port of a world model to connect to!"

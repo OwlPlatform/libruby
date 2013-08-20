@@ -22,11 +22,11 @@
 #
 ################################################################################
 require 'socket'
-require 'message_constants.rb'
-require 'wm_data.rb'
-require 'buffer_manip.rb'
-require 'response.rb'
-require 'step_response.rb'
+require 'libowl/message_constants.rb'
+require 'libowl/wm_data.rb'
+require 'libowl/buffer_manip.rb'
+require 'libowl/response.rb'
+require 'libowl/step_response.rb'
 
 require 'thread'
 

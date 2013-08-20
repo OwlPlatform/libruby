@@ -2,9 +2,9 @@
 #GRAIL3 world model as a solver.
 
 require 'socket'
-require 'buffer_manip.rb'
-require 'wm_data.rb'
-require 'transient_request.rb'
+require 'libowl/buffer_manip.rb'
+require 'libowl/wm_data.rb'
+require 'libowl/transient_request.rb'
 
 class SolverWorldModel
   #TODO Move constants to their own file

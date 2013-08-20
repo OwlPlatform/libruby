@@ -1,9 +1,9 @@
 #Require rubygems for old (pre 1.9 versions of Ruby and Debian-based systems)
 require 'rubygems'
-require 'client_world_model.rb'
-require 'solver_world_model.rb'
-require 'wm_data.rb'
-require 'buffer_manip.rb'
+require 'libowl/client_world_model.rb'
+require 'libowl/solver_world_model.rb'
+require 'libowl/wm_data.rb'
+require 'libowl/buffer_manip.rb'
 
 #The third argument is the origin name, which should be your solver or
 #client's name

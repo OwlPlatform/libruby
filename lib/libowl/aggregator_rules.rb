@@ -1,4 +1,4 @@
-require 'buffer_manip'
+require 'libowl/buffer_manip'
 
 class IDMask
   attr_accessor :id, :mask

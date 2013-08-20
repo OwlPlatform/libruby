@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.files.reject! { |fname| fname.include? "test" }
   s.has_rdoc = false
   s.homepage = %q{https://github.com/OwlPlatform/libruby}
-  s.require_paths = ["libowl"]
+  s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Protocols for interacting with the owl platform.}
 	s.license = 'LGPL-2.1'
