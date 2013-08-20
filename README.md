@@ -3,7 +3,7 @@ libruby
                           Owl Platform Ruby Libraries
 
 Version 1.1.0
-Last Updated May 26, 2013
+Last Updated August 20, 2013
 
 Project Website: <https://github.com/OwlPlatform/libruby>
 
