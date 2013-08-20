@@ -12,6 +12,6 @@ class SensorSample
   end
 
   def to_s()
-    return "#{@timestamp}: (phy #{@phy_layer}) #{@device_id} -> #{@receiver_id}, RSS:#{@rssi}, Datalength:#{@sense_data.length} Data:#{@sense_data}"
+    return "#{@timestamp}: (phy #{@phy_layer}) #{@device_id} -> #{@receiver_id}, RSS:#{@rssi}, Datalength:#{@sense_data.length} Data:#{@sense_data.unpack('C*').join(', ')}"
   end
 end
