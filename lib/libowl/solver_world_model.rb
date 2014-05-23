@@ -122,6 +122,13 @@ class SolverWorldModel
     @stop_transient_callback = stop_transient_callback
   end
 
+  ##
+  #Close this connection
+  def close()
+    @socket.close()
+    @connected = false
+  end
+
   #Add some SolutionType objects to the known list
   def addSolutionTypes(attributes)
     new_aliases = []
