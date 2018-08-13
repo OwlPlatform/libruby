@@ -96,7 +96,7 @@ class SolverAggregator
       txid = unpackuint128(rest)
       rxid = unpackuint128(rest[16, rest.length - 1])
       rest = rest[32, rest.length - 1]
-      timestamp, rssi = rest.unpack('Gg')
+      timestamp, rssi = rest.unpack('Q>g')
       sense_data = rest[12, rest.length - 1]
       @available_packets.push(SensorSample.new(phy_layer, txid, rxid, timestamp, rssi, sense_data))
     end
